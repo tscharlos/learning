@@ -18,18 +18,26 @@ jobs:
         uses: actions/checkout@v4
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v3
+      - name: 'Get tfvars files'
+        if: github.event.pull_request.merged == true
+        run: echo "depends on secret mgmt\nstage=$TF_VAR_STAGE"
         env:
           TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
           TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
           TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
-      - name: 'Get tfvars files'
-        if: github.event.pull_request.merged == true
-        run: echo "depends on secret mgmt"
         # if tfvars files were encrypted and checked in with e.g. sops decrypt it here
         # alternatively set them in the next step as env vars through github secrets
       - name: 'Terraform Init'
         if: github.event.pull_request.merged == true
-        run: terraform -chdir=terraform/${{ secrets.TF_VAR_DEV }} init  # TODO: Adapt for further envs
+        env:
+          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
+          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
+        run: terraform -chdir=terraform/$TF_VAR_DEV init  # TODO: Adapt for further envs
       - name: 'Terraform Apply'
         if: github.event.pull_request.merged == true
-        run: terraform -chdir=terraform/${{ secrets.TF_VAR_DEV }} apply # TODO: Adapt for further envs
+        env:
+          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
+          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
+        run: terraform -chdir=terraform/$TF_VAR_DEV apply # TODO: Adapt for further envs
