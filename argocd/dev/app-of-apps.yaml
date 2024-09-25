@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: applications-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tscharlos/learning.git
+    targetRevision: feat/TASK-1_Add-terraform
+    path: argocd/dev/apps
+  destination:
+    name: in-cluster
+    namespace: argocd

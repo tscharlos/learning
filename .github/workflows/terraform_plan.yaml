@@ -10,6 +10,7 @@ jobs:
     name: 'Plan changes'
     runs-on: ubuntu-latest
     env:
+      # set to right stage depending on changes in repo
       stage: ${{ vars.TF_VAR_DEV }}
     steps:
       - name: 'Checkout'

@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- app-podinfo.yaml
+- app-traefik.yaml
+- app-dadjokes.yaml
+- app-cert-manager.yaml

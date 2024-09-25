@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: traefik.decatech.at
+  namespace: traefik
+spec:
+  dnsNames:
+    - traefik.decatech.at
+  secretName: traefik.decatech.at
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dadjokes
+  namespace: dadjokes
+  labels:
+    app: dadjokes
+spec:
+  selector:
+    matchLabels:
+      app: dadjokes
+  template:
+    metadata:
+      labels:
+        app: dadjokes
+    spec:
+      containers:
+      - name: dadjokes
+        image: docker.io/yesinteractive/dadjokes
+        ports:
+          - containerPort: 8100
+            protocol: TCP
+          - containerPort: 8143
+            protocol: TCP

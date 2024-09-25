@@ -33,11 +33,11 @@ jobs:
         env:
           TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
           TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
-        run: terraform -chdir=terraform/$stage init  # TODO: Adapt for further envs
-      - name: 'Terraform Apply'
-        if: github.event.pull_request.merged == true
-        env:
-          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
-          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
-          TF_VAR_stage: $stage
-        run: terraform -chdir=terraform/$stage apply # TODO: Adapt for further envs
+        run: terraform -chdir=terraform/$stage init
+      # - name: 'Terraform Apply'
+      #   if: github.event.pull_request.merged == true
+      #   env:
+      #     TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+      #     TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
+      #     TF_VAR_stage: $stage
+      #   run: terraform -chdir=terraform/$stage apply

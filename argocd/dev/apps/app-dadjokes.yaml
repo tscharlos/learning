@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dadjokes
+  namespace: argocd
+spec:
+  destination:
+    namespace: dadjokes
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/tscharlos/learning.git
+    targetRevision: feat/TASK-1_Add-terraform
+    path: apps/dadjokes/dev
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true

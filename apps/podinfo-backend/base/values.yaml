@@ -1,0 +1,4 @@
+# can only include values included in *all* downstream files
+logLevel: debug
+redis:
+  enable: true
