@@ -1,0 +1,12 @@
+# terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.backup
+
+# .tfvar files - contain sensitive info
+*.tfvars
+
+# kubeconfig files created
+kubeconfig-*.yaml

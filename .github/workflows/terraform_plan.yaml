@@ -1,0 +1,30 @@
+name: Terraform plan
+on:
+  pull_request:
+    paths:
+      # TODO: Adapt for further envs
+      - 'terraform/dev/**'
+
+jobs:
+  plan:
+    name: 'Plan changes'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v3
+        env:
+          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
+          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
+      - name: 'Get tfvars files'
+        run: echo "depends on secret mgmt - here we use github secrets"
+        # if tfvars files were encrypted and checked in with e.g. sops decrypt it here
+        # alternatively set them in the next step as env vars through github secrets
+      - name: 'Terraform Init'
+        run: terraform -chdir=terraform/${{ secrets.TF_VAR_DEV }} init
+      - name: 'Terraform Validate'
+        run: terraform -chdir=terraform/${{ secrets.TF_VAR_DEV }} validate
+      - name: 'Terraform Plan'
+        run: terraform -chdir=terraform/${{ secrets.TF_VAR_DEV }} plan
