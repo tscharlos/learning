@@ -10,21 +10,34 @@ jobs:
     name: 'Plan changes'
     runs-on: ubuntu-latest
     env:
-      TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
-      TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
-      TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
+      stage: ${{ vars.TF_VAR_DEV }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v3
       - name: 'Get tfvars files'
-        run: echo "depends on secret mgmt - here we use github secrets"
+        run: echo "depends on secret mgmt - here we use github secrets\nstage=$stage"
+        env:
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
         # if tfvars files were encrypted and checked in with e.g. sops decrypt it here
         # alternatively set them in the next step as env vars through github secrets
       - name: 'Terraform Init'
-        run: terraform -chdir=terraform/$TF_VAR_DEV init
+        run: |
+          ls -l terraform/$stage
+          terraform -chdir=terraform/$stage init
+        env:
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
       - name: 'Terraform Validate'
-        run: terraform -chdir=terraform/$TF_VAR_DEV validate
+        run: terraform -chdir=terraform/$stage validate
+        env:
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
       - name: 'Terraform Plan'
-        run: terraform -chdir=terraform/$TF_VAR_DEV plan
+        run: terraform -chdir=terraform/$stage plan
+        env:
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
+          TF_VAR_stage: $stage

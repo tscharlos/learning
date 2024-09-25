@@ -12,6 +12,8 @@ jobs:
   apply:
     name: 'Apply changes'
     runs-on: ubuntu-latest
+    env:
+      stage: ${{ vars.TF_VAR_DEV }}
     steps:
       - name: 'Checkout'
         if: github.event.pull_request.merged == true
@@ -20,24 +22,22 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: 'Get tfvars files'
         if: github.event.pull_request.merged == true
-        run: echo "depends on secret mgmt\nstage=$TF_VAR_STAGE"
+        run: echo "depends on secret mgmt\nstage=$stage"
         env:
-          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
-          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
-          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
         # if tfvars files were encrypted and checked in with e.g. sops decrypt it here
         # alternatively set them in the next step as env vars through github secrets
       - name: 'Terraform Init'
         if: github.event.pull_request.merged == true
         env:
-          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
-          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
-          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
-        run: terraform -chdir=terraform/$TF_VAR_DEV init  # TODO: Adapt for further envs
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
+        run: terraform -chdir=terraform/$stage init  # TODO: Adapt for further envs
       - name: 'Terraform Apply'
         if: github.event.pull_request.merged == true
         env:
-          TF_VAR_KEY: ${{ secrets.TF_VAR_KEY }}
-          TF_VAR_SECRET: ${{ secrets.TF_VAR_SECRET }}
-          TF_VAR_STAGE: ${{ secrets.TF_VAR_DEV }}
-        run: terraform -chdir=terraform/$TF_VAR_DEV apply # TODO: Adapt for further envs
+          TF_VAR_key: ${{ secrets.TF_VAR_KEY }}
+          TF_VAR_secret: ${{ secrets.TF_VAR_SECRET }}
+          TF_VAR_stage: $stage
+        run: terraform -chdir=terraform/$stage apply # TODO: Adapt for further envs
