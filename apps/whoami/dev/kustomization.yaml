@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../base
+- ingress.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: whoami
+    patch: |
+      - op: replace
+        path: /spec/template/spec/containers/0/tag
+        value:
+          tag: v1.10

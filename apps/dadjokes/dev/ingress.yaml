@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-dadjokes
+  namespace: dadjokes
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: PathPrefix(`/dadjokes`)
+    kind: Rule
+    services:
+      - kind: Service
+        name: dadjokes
+        port: 8100

@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: traefik-cert-dev
+  namespace: app
+spec:
+  commonName: frontend.decatech.at
+  secretName: traefik-cert-dev
+  dnsNames:
+    - frontend.decatech.at
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-app

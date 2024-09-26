@@ -1,0 +1,36 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-frontend
+  namespace: app
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt-app
+spec:
+  # tls:
+  #   secretName: traefik-cert-dev
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/frontend`) || Header(`app`, `frontend`)
+      kind: Rule
+      services:
+        - kind: Service
+          name: frontend-podinfo
+          namespace: app
+          port: http
+    - match: Host(`frontend.decatech.at`)
+      kind: Rule
+      services:
+        - kind: Service
+          name: frontend-podinfo
+          namespace: app
+          port: http
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: temp-auth
+#   namespace: app
+# spec:
+#   basicAuth:
+#     secret: authsecret # this is created in namespace

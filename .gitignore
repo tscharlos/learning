@@ -5,8 +5,13 @@
 *.tfstate
 *.tfstate.backup
 
+# lock files
+.terraform.lock.hcl
+
 # .tfvar files - contain sensitive info
 *.tfvars
 
 # kubeconfig files created
 kubeconfig-*.yaml
+
+id_rsa*

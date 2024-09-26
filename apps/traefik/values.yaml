@@ -1,0 +1,8 @@
+ingressRoute:
+  dashboard:
+    enabled: true
+service:
+  type: LoadBalancer
+globalArguments: []
+additionalArguments:
+  - "--api.insecure=true"
